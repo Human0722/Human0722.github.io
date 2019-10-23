@@ -720,7 +720,101 @@ $posts = DB::table('posts')
 	->get();
 ```
 #### 联合查询
-> union 查询
+> union 查询 : 合并多个结果集,纵向拓展。 union 不允许重复记录, 而 union all 允许。
+```php
+// 不允许重复记录
+$post_a = DB::table('posts')->where('views',0);
+$post_b = DB::table('posts')->where('id', '<=', 10)->union($post_a)->get();
+// 允许重复记录
+$post_a = DB::table('posts')->where('views',0);
+$post_b = DB::table('posts')->where('id', '<=', 10)->unionAll($post_a)->get();
+```
+
+#### 排序
+```php
+$user = DB::table('posts')
+	->orderBy('created_at', 'desc')	// desc 降序, asc 升序
+	->get();
+
+$users->table('posts')->inRandomOrder()->get();	//乱序
+```
+#### 分组
+```php
+select user_id, sum(views) as total_views from `posts` group by `users_id`;
+$posts = DB::table('posts')
+	->groupBy('user_id')
+	->selectRaw('user_id, sum(views) as total_views')
+	->get();
+
+select user_id, sum(views) as total_views from `post` group by `user_id` having `total_views` >= 10;
+$posts = DB::table('posts')
+	->groupBy('user_id')
+	->selectRaw('user_id, sum(views) as total_views')
+	->having('total_views', '>=', 10)
+	->get();
+```
+#### 分页
+```php
+select * from `posts` where `views` > 0 order by `created_at` desc limti 5 offset 10;
+$posts = DB::table('posts')
+	->orderBy('created_at', 'desc')
+	->where('views', '>', 0)
+	->skip(10)->take(5)
+	->get();
+$posts = DB::table('posts')
+	->orderBy('created_at', 'desc')
+	->where('views', '>', 0)
+	->offset(10)->limit(5)
+	->get();
+```
+
+### Eloquent 模型
+> 首先， ORM是 Object Relationnal Mapping (对象关系映射)的全称, 用于面向对象语言中类和数据表的映射关系; ActiveRecord 是 ORM 的一种实现模式, Eloquent 则是 Laravel 版本的  ActiveRecord。
+
+#### Eloquent 模型的一些约定
+- 表名: Post模型对应的数据表为posts, PostTag表对应的表名称为post_tags。也可在模型类中设定成员属性 ```protected $table = 'xxx'``` 指定表名称。  
+- 主键: 默认为 ```id``` 字段,可以通过 ```protected $primaryKey = 'xx'``` 指定。
+- 时间戳: Eloquent 约定每张表都有 ```created_at``` 和 ```updated_at```字段, 在更改数据的时候自动维护这两个字段。如果数据表没有这两个字段, 需要设置 ``` public $timestamps = false``` 。另外默认存储的时间格式为 ```Y-m-d H:i:s```，可以通过 ```protected $dateFormat = 'U'``` 设置成时间戳, 但是字段应该为整形。
+- 数据库连接： 默认连接的互数据库为 ```config/database.php``` 中的默认连接,要是想更改则要指定属性 ```protected $connection = 'xxx'```, 前提是在 ```config/database.php``` 中配置好 ```xxx``` 数据库的配置。
+
+#### CURD of Eloquent
+```php
+$post = Post::all();	// 获取所有, 返回对象数组
+Post::chunk(10, function($posts) {	// 分批处理所有
+	foreach($posts as $post){
+		xxx;
+	}
+});
+foreach(Post::cursor() as $post)	// 逐条处理所有
+{
+	xxx;
+}
+
+$posts = Post::where('views', '>', 0)->select('id', 'title', 'content')->get();	// 指定结果， 返回对象数组
+$posts = Post::where('views', '>', 0)->orderBy('id', 'desc')->offset(10)->limit(5)->get();	// 排序+分页
+
+$user = User::where('id',1)->first();	// 获取单条数据, 返回对象
+$user = User::find(1);	// id是主键的话, 效果同上 
+$user = User::findOrFail(1);	//记录不存在则 返回 404
+
+$num = User::whereNotNull('email_verified_at')->count();	// 一些统计
+$sum = User::whereNotNull('email_verified_at')->sum('id');
+$sum = User::whereNotNull('email_verified_at')->avg('id');	//min max
+
+$post = new App\Post;	// 插入数据
+$post->title = 'xx';
+$post->save();
+
+$post = User::find(1);	// 更新数据
+$post->name = 'xxx';
+$post->save();
+Post::where('views','>', 0)->update(['name','xx']);		//批量更新
+
+$post = User::find(11);	// 删除数据
+$post->delete();
+
+Post::destory([1, 2, 4]);		// 批量删除
+```
 
 
 
