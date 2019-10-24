@@ -14,4 +14,4 @@ keywords: 小工具
 - ffmpeg
 
 ### 查看梯子提供的代理端口
-![代理](/images/tool/socks-port.jpg)
+![proxy]({{site.url}}/images/posts/socksport.jpg)
