@@ -1,8 +1,8 @@
 # ---------------- #
 #   Main Configs   #
 # ---------------- #
-baseurl:
-url: https://Human0722.github.io
+baseurl: 
+url: https://human0722.github.io
 date_format: "ordinal"
 title: 0722号人类
 subtitle: "Running before time took our dreams away."
