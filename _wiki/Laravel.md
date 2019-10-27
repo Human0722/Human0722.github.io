@@ -815,6 +815,97 @@ $post->delete();
 
 Post::destory([1, 2, 4]);		// 批量删除
 ```
+#### 批量赋值  
+> 从表单到数据库的直通车。批量赋值指的是批量赋值字段~
+
+以往的表单存储数据， 是这样处理的: 
+```php
+$post = new App\Post;
+$post->title = 'xx';
+$post->content = 'xxx',
+.....
+$post->save();
+```
+当字段比较少的时候，这样还可以处理。但是一旦表单字段很多的时候，这样处理起来活脱脱一个铁憨憨。为了避免成为铁憨憨，可以换一种入库的方式:
+```php
+$post = new Post($request->all());
+```
+这样 Laravel 会自动存储这条记录。但是但是有一个隐患，可能这条记录的所有者可能是虚假的，这就说明不能完全信任所有来自表单的字段。针对这一点， Laravel 推出了 ```黑名单``` 和 ```白名单``` 两种方式。
+```php
+模型文件中：
+protected $fillable = [];	//白名单
+protected $guarded = ['*'];	// 黑名单
+```
+批量赋值 也可以用于数据更新, 只要早获取模型后调用```fill```方法即可。
+```php
+$post = Post::findOrFail(11);
+$post->fill($request->all());
+$post->save();
+```
+#### 软删除
+> 没有 ```delete()``` 方法，只有 ```is_delete()``` 字段。通常的数据库设计中, 会添加一个 ```is_delete```字段来标注这条记录是否被删除，而不会在执行删除操作的时候真正地 删除掉这条记录。而 Laravel 也提供了类似功能的支持,这会让开发更加规范。默认的软删除标记字段是 ```deleted_at```, 可以通过设置模型类的静态属性 ```DELETED_AT``` 来自定义字段。比如 ```static public $DELETED_AT = 'is_delete;'```即可设置。
+首先，通过添加数据库迁移文件在表中添加 ```deleted_at``` 字段。  
+
+```shell
+php artisan make:migration alter_posts_add_deleted_at --table=posts
+```
+然后修改迁移文件后执行迁移，就会为数据表添加一个 ```deleted_at``` 字段。
+```php
+jdfklsa;fj;
+public function up()
+{
+	Schema::table('posts', function(Blueprint $table){
+		$table->softDeletes();
+	})
+}
+public function down()
+{
+	Schema::table('posts', function(Blueprint $table) {
+		$table->dropIfExists('deleted_at');
+	})
+}
+``` 
+修改完数据表之后，我们需要在模型文件中添加对软删除的支持。软删除功能是通过 ```Trait``` 的方式引入的，这种方式比继承更加灵活。
+```php
+use Illuminate\Database\Eloquent\SoftDeletes;	//这么长交给 IDE 自动导入吧。
+class Post extends Model
+{
+	use SoftDeletes;
+}
+```
+处理好这些步骤之后，就可以用下边的方法进行相关操作了。
+```php
+$post = Post::findOrFail(8);
+$post->delete();	// 软删除
+$post->forceDelete();	// 真删除
+if($post->trash()) {} //是否被软删除
+$post = Post::withTrashed()->find(3);	// 顺便在垃圾桶中寻找
+$post = Post::onlyTrashed()->find(3);	// 只在垃圾桶中寻找
+$post->restore();	// 数据恢复
+Post::onlyTrashed()->where('views','>', 0)->restore();	// 批量恢复
+```
+
+### Eloquent-访问器与修改器
+> 说白了访问器就是数据库原始数据和控制器获取的数据之间的转换器, 转换从数据库取出的数据。修改器刚好相反，是转换从控制器存入数据库的数据。虽然这些方法我们可以在控制器中完成，但是如果多个控制器都会调用这个数据并且转换，那么代码就会变得不可控，后期修改难度更大。  
+```php
+在模型中:（访问器）
+public function getDisplayNameAttribute()
+{
+	return $this->name ? $this->name : $this->nickName;
+}
+```
+看起来只能修改一个字段值？ 属性值 ```display_name```对应的方法是 ```getDisplayNameAttribute()```。  
+同样的,在修改器中，为了处理 ```card_no```字段，则需要这样定义方法名: 
+```php
+public function setCardNoAttribute($value)
+{
+	$value = trim($value);
+}
+```
+
+#### Eloquent-查询作用域
+
+
 
 
 
