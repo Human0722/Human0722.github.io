@@ -885,8 +885,9 @@ $post->restore();	// 数据恢复
 Post::onlyTrashed()->where('views','>', 0)->restore();	// 批量恢复
 ```
 
-### Eloquent-访问器与修改器
+#### Eloquent-访问器与修改器
 > 说白了访问器就是数据库原始数据和控制器获取的数据之间的转换器, 转换从数据库取出的数据。修改器刚好相反，是转换从控制器存入数据库的数据。虽然这些方法我们可以在控制器中完成，但是如果多个控制器都会调用这个数据并且转换，那么代码就会变得不可控，后期修改难度更大。  
+
 ```php
 在模型中:（访问器）
 public function getDisplayNameAttribute()
