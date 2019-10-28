@@ -905,6 +905,29 @@ public function setCardNoAttribute($value)
 ```
 
 #### Eloquent-查询作用域
+> 查询作用域分为 全局作用域、局部作用域和动态作用域三种。 
+
+<span class="ec ec-poop"></span><span class="ec ec-poop"></span><span class="ec ec-poop"></span>无力回天, 看不懂。[学院君传送门<span class="ec ec-ambulance"></span>](https://xueyuanjun.com/post/9710.html)
+
+#### 模型事件及监听方式 <span class="ec ec-ear"></span>
+
+> 通过 ```Eloquent``` 模型执行操作会触发对应的模型事件。 需要注意的是, ```Eloquent``` 是基于 查询构造器 ```DB::``` 构建的, 如果直接通过查询构造器操作数据，是不会触发模型事件的。所以如果没有触发模型事件,可能是因为调用的方法直接调用的查询构造器, 如批量赋值。  
+
+模型中支持的事件:
+- retrieved: 获取到模型实例后触发
+- creating: 插入到数据库前触发
+- created: 插入到数据库后触发
+- updating: 更新数据前触发
+- updated: 更新数据后触发
+- saving: 保存数据前触发
+- saved: 保存数据后触发
+- deleting: 删除数据前触发
+- deleted: 删除数据后触发
+- restoring: 恢复软删除记录之前触发
+- restored: 恢复软删除记录之后触发
+
+##### 通过静态方法监听
+
 
 
 
