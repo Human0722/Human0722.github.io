@@ -924,10 +924,34 @@ public function setCardNoAttribute($value)
 - deleting: 删除数据前触发
 - deleted: 删除数据后触发
 - restoring: 恢复软删除记录之前触发
-- restored: 恢复软删除记录之后触发
+- restored: 恢复软删除记录之后触发   
+
+注册监听方法主要有三种方式, 通过静态方法监听、 通过订阅者监听模式监听、 通过观察者监听。此中设计大量设计模式关键词：<span class="ec ec-eyes"></span><span class="ec ec-eyes"></span>基础不牢, 这就是天花板。等后续更新设计模式博客。  
 
 ##### 通过静态方法监听
+图的左侧部分为传统的访问数据库方式。 增加监听方法后, 模型类在操作数据之前会检测是否注册了监听事件,如果注册了事件,会在操作数据之前或者之后执行那个事件。右图只是帮助理解, 在 Laravel 框架中, 事件的注册是随着框架的启动一起注册的, ```boot()``` 方法的调用一定优先于 控制器作出动作。
+![static]({{site.url}}/assets/images/laravel/bystatic.svg)
+通过静态方法监听的代码:
+```php
+// app/Providers/EventServiceProvider.php:
+public function boot()
+{
+	parent::boot();
 
+	//监听模型获取事件
+	User::retireved(function($user) {
+		Log::info('从模型中获取用户[' . $user->id . ']' . $user->name);
+	});
+}
+```
+当我们执行以下代码时， 日志文件 ```storage/logs/laravel.log``` 就会记录下所执行的操作。
+```php
+$user = User::find(3);
+```
+这种方法像是在路由文件中处理请求并相应一样，一旦注册事件多了起来类就会变得非常臃肿。
+
+#### 通过订阅者监听模型事件
+#### 通过观察者监听模型事件
 
 
 
