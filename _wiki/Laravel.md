@@ -950,9 +950,115 @@ $user = User::find(3);
 ```
 这种方法像是在路由文件中处理请求并相应一样，一旦注册事件多了起来类就会变得非常臃肿。
 
-#### 通过订阅者监听模型事件
-#### 通过观察者监听模型事件
+##### 通过订阅者监听模型事件
+![subscribe]({{site.url}}/assets/images/laravel/subscribe-listen.svg)
+图中监听的是删除操作之前的```deleting``` 和删除之后的 ```deleted```事件。 在执行删除操作时, User 模型会触发这两个事件, 对外用 ```UserDeletingEvent``` 和 ```UserDeletedEvent``` 两个类表现这两个事件。此时 ```UserEventSubscrier``` 中已经注册监听了这两个事件类, 且编写了对应的处理方法。所以此时对应的方法会被触发。为了让 ```UserEventSubscriber``` 类生效, 需要在服务提供类 ```EventServiceProvider``` 中注册这个订阅者, 即可在框架启动时让这个订阅生效。  
 
+首先, 先创建两个事件类：
+```shell
+php artisan make:event UserDeleting
+php artisan make:event UserDeleted
+```
+然后执行与模型事件绑定的第一步： 在这两个事件类的构造方法中传入模型类实例：
+```php
+// app/Event/UserDeleted.php
+// app/Event/UserDeleting.php
+public $user;
+public function __construct(User $user)
+{
+	$this->user= $user;
+}
+```
+然后执行与模型事件绑定的第二步：我们在模型类中建立模型事件和自定义模型类的映射:
+```php
+protected $dispatchesEvents = [
+	'deleting' => UserDeleting::class,
+	'deleted' => UserDeleted::class
+];
+```
+可以把事件类看作时对外的信号灯, 每当模型类操作触发事件时对应的信号灯就会亮起。 看到这个信号灯并且执行对应操作的方法有两种, 第一种是在 ```EventServiceProvider``` 的 ```listen``` 属性中为每个事件绑定对应的监听器类。另一种是创建事件订阅类来处理各种信号等。   
+创建一个订阅者类, 在 ```app/Listeners``` 目录下创建一个 ```UserEventSubscriber.php```文件。
+```php
+<?php
+namespace App\Listeners;
+
+use App\Events\UserDeleted;
+use App\Events\UserDeleting;
+
+class UserEventSubscriber
+{
+	// 定义用户删除前事件
+	public function onUserDeleting($event) 
+	{
+		// do sth before deleting
+	}
+
+	// 定义用户删除后事件
+	public fnction onUserDeleted($event)
+	{
+		// do sth after deleting
+	}
+
+
+	// 为订阅者注册监听器： 不同信号触发不同的方法（信号方法映射）
+	public function subscribe($events)
+	{
+		$events->listen(
+			UserDeleting::class,
+			UserEventSubscriber::class . '@onUserDeleting'
+		);
+
+		$events->listen(
+			UserDeleted::class,
+			UserEventSubscriber::class . '@onUserDeleted'
+		);
+	}
+}
+```
+
+最后，我们在 ```EventServiceProvider``` 中注册这个订阅者, 使之生效:
+```php
+// app/Providers/EventServeceProvider.php
+
+protected $subscribe = [
+		UserEventSubscriber::class
+];
+```
+
+##### 通过观察者监听模型事件
+
+Laravel 还提供了观察者的方式来监听模型事件。 观察者类更像是将静态方法监听的所有方法独立到一个类中, 然后注册这个观察者类即可。  
+首先,通过 ```artisan``` 命令创建针对 ```User``` 模型的观察者类:
+```shell
+php artisan make:observer UserObserver --model=user
+```
+然后修改观察者类即可:
+```php
+// app/Observers/UserObserver.php
+class UserObserver 
+{
+	public function saving(User $user)
+	{
+		// do sth before saving
+	}
+
+	//... like creating、 updated、 saved...
+}
+```
+最后将其注册到 ```User``` 模型上。可以在 ```EventServiceProvider``` 的 ```boot()``` 方法中完成。
+```php
+public boot()
+{
+	parent::boot();
+	User::observe(UserObserver::class);
+}
+```
+
+<span class="ec ec-rocket"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span>
+
+#### Eloquent 模型关系01
+#### Eloquent 模型关系02
+#### Eloquent 模型关系03
 
 
 
