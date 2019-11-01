@@ -1057,8 +1057,145 @@ public boot()
 <span class="ec ec-rocket"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span>
 
 #### Eloquent 模型关系01
+> 模型关系可以分为一对一、一对多、多对多。  
+
+#### 一对一
+存在两张表, 一张是 ```users``` 表, 另一张是 ```user_profiles``` 表。  
+
+
+<strong>user table: </strong> 
+<table>
+	<tr>
+		<th>id</th>
+		<th>name</th>
+		<th>...</th>
+	</tr>	
+	<tr>
+		<td>1</td>
+		<td>human0722</td>
+		<td>...</td>
+	</tr>
+</table> 
+
+<strong>user_profiles table：</strong>
+<table>
+	<tr>
+		<th>id</th>
+		<th>user_id</th>
+		<th>nickname</th>
+		<th>...</th>
+	</tr>	
+	<tr>
+		<td>1</td>
+		<td>1</td>
+		<td>BtainleeR</td>
+		<td>...</td>
+	</tr>
+</table>   
+
+为了通过用户 ```ID``` 查找到用户的 ```nickname```，需要以下几个步骤:  
+
+首先, 在 ```User``` 模型类中通过 ```hasOne``` 方法定义与 ```UserProfile``` 模型的一对一关联。
+```
+// User.php
+public function profile()
+{
+	return $this->hasOne(UserProfile::class);
+}
+
+然后可以通过以下方式访问 ```nickname``` 字段。
+```php
+$user = User::findOrFail(1);
+$profile = $user->profile;
+$nickname = $profile->
+```
+只定义了一个模型关联, Laravel 怎么知道是哪两个字段相关联呢？首先看一下 ```hasOne``` 方法的完整参数列表: 
+```php
+public function hasOne($related, $foreignKey = null, $localKey = null)
+```
+其中, 第一个参数是关联的模型, 第二个参数是关联模型所属表的外键(user_id), 第三个参数是关联表关联到当前模型的字段(id)。如果没有提供 ```$foreignKey``` 字段, Eloquent 底层会进行如下拼接:
+```php
+public function getForeignKey()
+{
+	return Str::snake(class_basename($this)) . '_'. $this->getKeyName();
+	// 'user' . '_' . 'id'
+}
+```
+可以看出, 在本例子中拼接的结果刚好是 ```user_id```. 这也是 Eloquent 底层的约定。 <span class="ec ec-snowman"></span><span class="ec ec-snowman"></span><span class="ec ec-snowman"></span>   
+
+有的时候我们也需要通过 ```UserProfile``` 模型来反查 ```User``` 模型, Eloquent 也提供了 ```belongTo``` 方法来建立这一关系 。
+```php
+//UserProfile.php:
+public function user()
+{
+	return $this->belongTo(User::class);
+}
+```
+定义完这个方法后,就可以通过以下方式访问 User 模型:
+```php
+$profile = UserProfile::findOrFail(2);
+$user = $profile->user;
+```
+来看一下 	```belongTo()``` 方法的完整参数列表:
+```php
+public function belongTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
+```
+其中, 第一个参数是关联的模型名称; 第二个参数是当前模型所属表的外键;第三个参数是关联模型所属表的主键;第四个参数是关联关系名称。  
+第四个参数看不明白<span class="ec ec-rofl"></span><span class="ec ec-rofl"></span>, 但是可以通过下面的方法关联模型:
+```php
+//UserProfile.php
+public function user()
+{
+	return $this->belongTo(User::class, 'user_id', 'id');
+}
+``` 
+#### 一对多
+> 详细步骤看上面的一对一<span class="ec ec-point-up-2"></span>[去看看](#一对一)   
+
+假设这次的模型是用户和文章, 一个用户会有多个文章,这就是一对多的关系。如何通过用户查到属于他的多篇文章呢?
+```php
+// User.php
+public function posts()
+{
+	// 底层约定: hasMany($related, $foreignKey = null, $localKey = null)
+	return $this->hasMany(Post::class);
+}
+```
+使用：
+```php
+$user = User::findOrFail(1);
+$post = $user->posts;  // 返回对象数组
+```
+通过文章找用户设置方法:
+```php
+// Post.php
+public function user()
+{
+	return $this->belongsTo(User::class);
+}
+```
+使用：
+```php
+$post = findOrFail(2);
+$author = $post->user;
+```
+以上的使用方法为懒惰式加载, 每条记录需要查询两次数据表。可以通过以下方法调用减少查询次数,这种方法叫做渴求式加载。
+```php
+$Posts = Post::with('user')
+	->where('views', '>', 0)
+	->offset(1)->limit(10)
+	->get();
+```
+#### 多对多
+> 详细步骤看上面的一对一<span class="ec ec-point-up-2"></span>[去看看](#一对一)  
+
+以文章和标签为例：一个文章可以有很多歌标签,同时一个标签也可以为很多文章所拥有。这就是多对多的关系。
+
 #### Eloquent 模型关系02
+> <span class="ec ec-rofl"></span><span class="ec ec-rofl"></span><span class="ec ec-rofl"></span> 估计暂时用不到。 <span class="ec ec-point-right"></span> [传送眼位](https://xueyuanjun.com/post/9725.html) 
+
 #### Eloquent 模型关系03
+> <span class="ec ec-rofl"></span><span class="ec ec-rofl"></span><span class="ec ec-rofl"></span>估计暂时也用不到。 <span class="ec ec-point-right"></span> [传送眼位](https://xueyuanjun.com/post/9726.html)  
 
 ### 处理用户请求
 
