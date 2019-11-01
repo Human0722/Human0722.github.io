@@ -1189,15 +1189,160 @@ $Posts = Post::with('user')
 #### 多对多
 > 详细步骤看上面的一对一<span class="ec ec-point-up-2"></span>[去看看](#一对一)  
 
-以文章和标签为例：一个文章可以有很多歌标签,同时一个标签也可以为很多文章所拥有。这就是多对多的关系。
+以文章和标签为例：一个文章可以有很多歌标签,同时一个标签也可以为很多文章所拥有。这就是多对多的关系。一般这种关系的数据表需要第三个表来记录关系： A表、B表、A表B表关联表。
+
+<strong>Table posts:</strong>
+<table>
+	<tr>
+		<th>id</th>
+		<th>title</th>
+		<th>...</th>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>Laravel的使用</td>
+		<td>...</td>
+	</tr>
+</table>
+<strong>Table tags:</strong>
+<table>
+	<tr>
+		<th>id</th>
+		<th>name</th>
+		<th>...</th>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>技术文章</td>
+		<td>...</td>
+	</tr>
+</table>
+<strong>Table post_tags:</strong>
+<table>
+	<tr>
+		<th>id</th>
+		<td>post_id</td>
+		<td>tag_id</td>
+		<td>...</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>1</td>
+		<td>1</td>
+		<td>...</td>
+	</tr>
+</table>
+<hr>
+
+通过 ```Post``` 模型与 ```Tag``` 模型关联：
+```php
+// Post.php
+public function tags()
+{
+	return $this->belongsTo(Tag::class, 'post_tags');
+}
+```
+使用:
+```php
+$post = Post::findOrFail(1);
+$tags = $post->tags;
+```
+通过 tag 找 post:  
+```php
+// Tag.php
+public function posts()
+{
+	return $this->belongsTo(Post::class, 'post_tags');
+}
+```
+使用：
+```php
+$tag = Tag::with('posts')->where('name', 'ab')->first();
+$post = $tag->posts
+```
+下面是 ```belongsToMany``` 的详细的参数列表:
+```php
+public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $parentKey = null, $relateKey = null)
+```
+其中,第一个参数是关联的模型, 第二个参数值中间表。第三个参数是中间表中当前模型的外键, 第四个参数是中间表当前关联模型的外键, 第五个参数是当前表与第三个参数对应的字段, 第六个参数是关联模型与第四个残水对应的字段。  
+只有第一个参数是必须的, Laravel 为后边的参数提供了默认的值。其默认值的规则为:   
+第二个参数: 当前模型类名转换为小写 + '_' + 关联模型类名转换为小写。  
+第三个参数: 当前模型类名转换为小写 + '_' + 'id'  
+第四个参数: 关联模型类名转换为小写 + '_' + 'id'  
+第五个参数: 当前模型类中的 id  
+第六个参数： 关联模型类中的 id  
+> 看糊涂了？<span class="ec ec-rofl"></span><span class="ec ec-rofl"></span> 其实只要按照: posts 表, tags 表, post_tags表(`id`, `post_id`, `tag_id`)这样的规范去建表, belongsToMany()只提供两个参数就够了。
 
 #### Eloquent 模型关系02
-> <span class="ec ec-rofl"></span><span class="ec ec-rofl"></span><span class="ec ec-rofl"></span> 估计暂时用不到。 <span class="ec ec-point-right"></span> [传送眼位](https://xueyuanjun.com/post/9725.html) 
+> <span class="ec ec-rofl"></span><span class="ec ec-rofl"></span><span class="ec ec-rofl"></span> 估计暂时用不到。 <span class="ec ec-point-right"></span> [传送眼位](https://xueyuanjun.com/post/9725.html) 。 太复杂了， 还不如直接 DB 来的方便。
 
 #### Eloquent 模型关系03
 > <span class="ec ec-rofl"></span><span class="ec ec-rofl"></span><span class="ec ec-rofl"></span>估计暂时也用不到。 <span class="ec ec-point-right"></span> [传送眼位](https://xueyuanjun.com/post/9726.html)  
 
 ### 处理用户请求
+#### 获取用户请求的数据
+> 在 Laravel 中可以直接访问 【 只读 】 路由(GET/HEAD/OPTIONS), 如果访问的是 【 写入】 路由(POST/PUT/PATCH/DELETE), 则需要一个隐藏的 ```_token``` 字段, 否则 Laravel 会返回一个 HTTP 419 Error. 
+
+
+```php
+// XxController.php
+public function form(Request $request)
+{
+	// 所有参数
+	$param = $request->all();
+	// 白名单
+	$param = $request->only(['id', 'name']);
+	// 黑名单
+	$param = $request->except('id');
+	// 是否含某个字段
+	$request->has('id');
+	// 获取字段值
+	$id = $request->input('id');
+	$name = $request->input('name', '匿名用户');
+	// 处理数组, 复选框属性名通常是 name[]
+	$request->input('name.0');
+	$requeset->input('name.1');
+	$request->input('name.0.author');
+	// 处理 JSON
+	$request->input('site');
+	$request->input('input.0.author');
+	// 如果请求的 HTTP 头没有设置 appliocation/json， 那么 Laravel 默认会按字符串来处理, 需要显示地调用 $request->json()来获取 json 数据。
+
+}
+```
+#### 获取路由参数
+```php
+// route.php
+Route::post('form/{id}', 'IndexController@index');
+// IndexController.php
+public function form(Request $requeset, $id)
+{
+	//
+}
+```
+
+# Laravel 混合编码的最佳实践
+写在末尾: 到这里, ```Laravel``` 基础的部分就算完结了，洋洋洒洒 3.5W 个字。与此同时正在用 ```Vue + Laravel``` 做项目。 推了重做好几次, 很多 ```Vue``` 问题冒出来只能避坑, 没有能力填坑。
+- 第一个阶段上来就前后端分离, 用 ```Vue-cli``` 搭建了个环境, 移动端 UI 框架从 ```vuex``` 换到 ```Vant```。样式写完了, 后端开始用 ```Laravel``` 写接口。纯属炫技, 加入了 ```VueRouter``` 写成了 ```SPA```。可是一想到后边写 json API 还行, 可是有的管理接口要认证就一点想法都没有, 还有怎么在前端里用微信OAuth。 一想作罢, 好在样式写的差不多了,第二个阶段也不算是从0 开始。   
+
+- 第二个阶段只是把 ```Vue-cli``` 换成了 ```Laravel mix```。构建到最后, 发现只编译成了一个 html 文件, 一拍脑门 ```SPA``` 就是 在一个文件里啊，焕然大悟,但是 ```路由懒加载``` 搞了半天没起作用，这个 SPA 异常臃肿缓慢。 为了灵活性, 网页中的每一个细节都来个 ```Ajax``` 请求属性值, 像极了一个插满箭矢的粪球。
+
+- 第三个阶段大彻大悟, 直接在 app.js 中将 ```Vant``` 所有组件注册完毕。有开始炫技搬使用各种花俏的 ```Laravel Blade``` 模板语法, 各种 extends component 满天飞,然后直接在 ```xxx.blade.php``` 模板文件中使用 Vant 标签, 鉴于之前的各种模板混乱的融和, 后期引入别的 Vue UI 直接就无效了。没办法,第四版~
+
+- 第四版在 ```app.js``` 中注册好 UI 框架, 然后写很多 VueComponent， 然后在 app.js 中注册这些组件,然后在 xxx.blade.php 中直接使用这些组件即可。上述都是因为前端的关系, 不断地重构, 后端本来打算自构 CMS 的, 可是 ```Wordpress``` 那么香, 直接基于 ```Wordpress reset api``` 构建了。
+
+<strong>
+	正文开始:
+</strong>
+
+基础框架的安装:
+```shell
+# Install Laravel
+composer create-project laravel/laravel projectName --prefer-dist 5.7.*
+# Install js package
+yarn install
+```
+
 
 
 
