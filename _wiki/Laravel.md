@@ -1334,7 +1334,66 @@ public function form(Request $requeset, $id)
 composer create-project laravel/laravel projectName --prefer-dist 5.7.*
 # Install js package
 yarn install
+# 安装 vue-template-compiler
+yarn add vue-template-compiler --save-dev
+# 运行起来
+yarn run watch	# 实时监视前端资源变换并立即编译
+php artisan serve 	# 通过 PHP 内置服务器运行应用
 ```
+数据表的创建:
+```shell
+php artisan make:model Xxx -m
+// 修改迁移文件之后执行:
+php artisan migrate
+```
+Vue 组件的最佳使用方式:
+1. 首先在 ```app.js``` 中引入需要使用的 ```vue``` 库，比如 ```Vant```等。
+2.在 ```resources/views```文件夹中先定义一个 ```layout/default.blade.php```， 在这个文件中定义网页的整体布局和公共部分。
+3. 在 ```resources/js/components``` 文件夹中定义 Vue 组件, 并在 ```app.js``` 总注册这个组件。
+```javascript
+Vue.component('example-component',require('./component/ExampleComponent.vue').default);
+```
+注意一定要先执行 ```yarn run watch``` 来监视前端资源的变化, 否则组件并未能正确注册。然后在 blade 模板使用： ```<example-component>```.
+
+关于 Laravel控制器 -> Laravel Blade -> Vue 组件的传值问题：
+> 在 Blade 模板中像 Vue 组件传值都是通过 Vue 的属性传递, 首先要在 Vue 组件中添加这个属性值。
+
+1. 在 Vue 组件中添加这个属性值 
+
+```javascript
+export default {
+	name: 'xxx',
+	props: ['propsName']	// 添加属性 propsName
+}
+```
+然后在 blade 模板中传值
+```html
+<!-- 传字符串 -->
+{% raw %}
+<example-component propsName="{{ $props }}" ></example-component>
+{% endraw %}
+<!-- 传对象 -->
+{% raw %}
+<example-component :propsName="{{ json_encode($props) }}"></example-component>
+{% endraw %}
+```
+最后在 Vue 组件中使用这个值:
+```javascript
+<template>
+	<input :value="propsName">	// 通过属性值绑定的数据时单向的, v-model 不能直接绑定属性值, 将属性值赋值给 data 成员再绑定即可。
+	<input v-model="provalue">
+</template>
+export default {
+	name: 'xxx',
+	props: ['propsName'],
+	data() {
+		return {
+			provalue: this.propsName
+		}
+	}
+}
+
+````
 
 
 
