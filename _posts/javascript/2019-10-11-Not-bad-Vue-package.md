@@ -20,3 +20,4 @@ keywords: javascript, css
 - Emoji.css：<span class="ec ec-joy"></span><span class="ec ec-joy"></span><span class="ec ec-rofl"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span><span class="ec ec-rocket"></span>([Demo+文档](https://ionicabizau.github.io/emoji.css/))
 - axios : HTTP 请求工具([中文文档](http://www.axios-js.com/docs/index.html))
 - toastr: 弹窗组件 ([Github](https://github.com/CodeSeven/toastr))
+- vue-aplayer： 音乐播放组件 （[官网](https://aplayer.moefe.org/)+[文档](https://aplayer.moefe.org/docs/guide/)）
