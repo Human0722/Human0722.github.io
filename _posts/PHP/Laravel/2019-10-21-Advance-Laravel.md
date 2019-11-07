@@ -1,18 +1,14 @@
 ---
 layout: post
-title: Laravel 框架的进阶
+title: 用 Laravel 构建 JSON API
 categories: [Laravel]
-description: Laravel 的高级用法
+description: RESTful 风格 API 设计原则与最佳实践
 keywords: Laravel, 
 ---
-> Laravel 框架的进阶用法。  
+> RESTful 风格 API 设计原则与最佳实践
 
 <span class="ec ec-sneezing-face"></span><span class="ec ec-sneezing-face"></span><span class="ec ec-sneezing-face"></span>
 基( di )础( ji )的 Laravel 知识点 [传送门](https://human0722.github.io/wiki/Laravel/)
 
-## Artisan 命令的编写
-## 认证
-## 请求与响应
-## 服务容器
-## 单元测试
-## Json API
+## RESTful API介绍
+[眼位](https://xueyuanjun.com/post/19638.html)
