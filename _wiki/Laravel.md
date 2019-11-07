@@ -1,6 +1,6 @@
 ---
 layout: wiki
-title: Laravel
+title:  Laravel
 categories: [PHP]
 description: Laravel 的一些用用法
 keywords: Laravel, PHP
