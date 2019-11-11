@@ -22,7 +22,7 @@ php artisan make:controller TaskController --resource
 Route::resource('tasks', 'TaskController');
 ```
 通过上面两步，就构建好了以下API:
-![Resource路由表](https://qcdn.xueyuanjun.com/wp-content/uploads/2019/04/6653dc1550b7b448162c8e1237ba6864.jpg)
+![Resource路由表]({{site.url}}/assets/images/laravel/restful-api.jpg)
 3. 编辑资源文件，删除掉 ```show``` 和 ```edit``` 两个方法, API 接口用不到展示表单。
 4. 得益于 Laravel 对 JSON 的友好支持, 即使在成员方法中返回对象、数组, 底层也会自动转为 JSON 格式。
 ```php
@@ -32,4 +32,4 @@ Route::resource('tasks', 'TaskController');
     }
 ```
 ![测试JSON]({{site.url}}/assets/images/laravel/advanceLaravel001.jpg)
-5. 自定义 JSON 格式
+5. 自定义 JSON 数据组成格式
