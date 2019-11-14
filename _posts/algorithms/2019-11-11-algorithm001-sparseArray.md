@@ -1,14 +1,14 @@
 ---
 layout: post
-title: 数据结构与算法【001】
+title: 数据结构与算法 【001】
 categories: [算法]
 description: 来点算法
 keywords: 数据结构, 算法
 ---
 
-### 概述
+> 稀疏数组<span class="ec ec-gift-heart"></span>
 
-> 稀疏数组
+### 概述
 
 下图左侧的含有大量空值的数组可以用稀疏数组来表示, 右侧为稀疏数组。
 
