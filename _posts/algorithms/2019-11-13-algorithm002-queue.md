@@ -13,17 +13,27 @@ keywords: 算法, 数据结构
 
 
 ### 普通数组队列
-维护一个数组队列的属性值:
-- maxSize: 用于控制队列长度, 初始化队列数组。
-- head: 队列首元素前面位置的指针, 默认为-1。
-- tail: 队列尾元素的指针, 默认为 -1。
+普通不可复用数组队列属性值及其含义:  
 
-数组队列的成员方法:
-- isEmpty ( ) : 只要判断 ```tail``` 是否等于 ```head```。
-- isFull ( ): 只要判断 ```tail``` 是否等于 ```maxSize-1```。
-- add (int value): queue[++tail] = value, 向队列尾部添加元素
-- get ( ): queue[++head], 从队列头部取出元素
-- peek ( ) : queue[font+1], 仅查看队列头部元素
+prop | desc
+-|-
+maxSize | 定义队列长度
+head | 队列首元素前一个位置指针, default: -1
+tail | 队列尾元素指针, default: -1
+
+普通不可复用数组队列属性值及其含义： 
+
+func | core | desc
+-|-
+isEmpty() | （tail == head) ?			| 首尾指针是否相遇
+ifFull() |	(tail == maxSize -1) ?		| 尾指针是否到最后一个位置
+add(value) | queue(++tail) = value 		| 先将尾指针向后移， 再赋值
+get() | return queue(++head)			| 先将头指针向后移, 在返回后移后对应的值。
+peek() | return queue(head + 1)			| 返回头指针后（首）的值，不动首指针
+
+
+更多判断逻辑见下队列类:
+
 
 ```java
 class ArrayQueue {
@@ -79,3 +89,94 @@ class ArrayQueue {
 这是最基础的队列, 存在空间利用率低且只能使用一次的缺点。
 
 ### 环形队列
+
+环形队列属性值及其含义: （<span class="ec ec-clown-face"></span> 为与普通不可复用队列不同点）
+
+prop|desc
+-|-
+maxSize | 定义队列的长度
+head 	| 队列首元素的指针, 默认为0 <span class="ec ec-clown-face"></span> 
+tail 	| 队列尾元素后一个位置的指针, 默认为0 <span class="ec ec-clown-face"></span>
+
+环形队列成员方法:
+
+func | core | desc
+-|-|-
+isEmpty() | tail == head ? | 一些解释
+isFull()  | (tail + 1) % maxSize == head ? | 一些解释
+size()	  | (tail + maxSize - front) % maxSize | 一些解释
+
+> 约定： 环形队列中保留一个位置为空，这个位置位于队尾和队头之间， tail 指针所指位置。
+
+更多判断逻辑见下队列类:
+
+```java
+class CircleQueue {
+	private int maxSize;		// 队列长度
+	private int head;			// 队首指针
+	private int tail;			// 队尾后一个位置指针
+	private int[] queue;		// 队列数组
+
+	public CircleQueue(int size) {
+		this.maxSize = size;
+		this.head = 0;
+		this.tail = 0;
+		this.queue = new int[maxSize];
+	} 
+
+	public boolean isEmpty() {
+		return this.head == this.tail;
+	}
+
+	public boolean isFull() {
+		return (this.tail + 1) % this.maxSize == this.head;
+	}
+
+	public int size() {
+		return (tail + maxSize - head) % maxSize;
+	}
+
+	public void add(int value) {
+		if(isFull()) {
+			throw new RuntimeException("Queue is Full.");
+		}
+		queue[this.tail] = value;
+
+		this.tail = (this.tail + 1) % this.maxSize;
+	}
+
+	public int get() {
+		if(isEmptu()) {
+			throw new RuntimeException("Queue is empty!");
+		}
+		int returnVal = queue[this.head];
+		this.head = (this.head + 1) % this.maxSize
+		return returnVal;
+	}
+
+	public void show() {
+		for(int i=front; i<this.size(); i++) {
+			System.out.println("i: " + i + ", value: " + queue[(this.front + i) % maxSize]);
+		}
+	}
+
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
