@@ -14,12 +14,12 @@ keywords: 算法, 数据结构
 
 ```java
 class LinkedListNode {
-	private int NO;
+	private int no;
 	private String name;	// 内容
 	private LinkedListNode next;	// 下一节点指针
 
-	public LinkedListNode(int NO, String name) {
-		this.NO = No;
+	public LinkedListNode(int no, String name) {
+		this.no = no;
 		this.name = name;
 	}
 
@@ -38,7 +38,7 @@ class LinkedList {
 
 
 	// add to the end 
-	public add(LInkedListNode node) 
+	public add(LinkedListNode node) 
 	{
 		LinkedListNode temp = head;
 
@@ -53,7 +53,86 @@ class LinkedList {
 		temp.next = node;
 	}
 
+	// add to linkedlist order by no
+	public void addByOrder(LinkedListNode) {
+		LinkedListNode temp = head;
+		boolean flag = false;	// 标记是否存在相同 no 的节点， 默认不存在
 
+		while(true) {
+			if(temp.next = null) {
+				break;
+			}
 
+			if(temp.next.no > node.no) {
+				flag = true;
+				break;
+			}
+
+			temp = temp.next;
+		}
+
+		if(flag) {
+			node.next = temp.next;
+			temp.next = node;
+		}else {
+			temp.next = node;
+		}
+	}
+
+	// update LinkedListNode by no
+	public void update(LinkedListNode node) {
+		if(head.next == null) {
+			System.out.println("LinkedList is empty.");
+			return;
+		}
+
+		LinkedListNode temp = head.next;
+		boolean flag = false;		// 标记是否执行修改,默认为false
+
+		while(true) {
+			if(temp == null) {
+				break;
+			}
+
+			if(temp.no == no) {
+				flag = true;
+				break;
+			}
+
+			temp = temp.next;
+		}
+
+		if(flag) {
+			temp.name = node.name;
+		}else {
+			System.out.println("Node do not exists.");
+		}
+	}
+
+	// delete Node by no
+	public void delete(int no) {
+		LinkedListNode temp = head;
+		boolean flag = false;	// 删除节点是佛存在, 默认不存在。
+
+		while(true) {
+
+			if(temp.next = null) {
+				break;
+			}
+
+			if(temp.next.no == no) {
+				flag = true;
+				break;
+			}
+
+			temp = temp.next;
+		}
+
+		if(flag) {
+			temp.next = temp.next.next;
+		}else {
+			System.out.println("Node do not exists.");
+		}
+	}
 }
 ```
