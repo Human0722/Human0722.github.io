@@ -297,6 +297,38 @@ class NodeManager {
 }
 ```
 
-> 环形链表
+> 单向环形链表  
+
+最简单的单向环形节点类：
+
+```java
+class Node {
+    private int no;
+    private Node next;
+
+    public Node(int no) {
+        this.no = no;
+    }
+
+    public setNext(Node node) {
+        this.next = node;
+    }
+
+    public Node getNext() {
+        return this.next;
+    }
+}
+```  
+
+环形链表类:
+
+```java
+class CircleManager {
+    private Node first = null;
+
+    public 
+}
+```
+
 
 
