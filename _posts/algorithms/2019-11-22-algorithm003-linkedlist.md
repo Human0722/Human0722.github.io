@@ -320,13 +320,98 @@ class Node {
 }
 ```  
 
-环形链表类:
+### 环形链表及约瑟夫问题的解决
+
+> 主要包含了 addToCircle() 用于生成环形链表, show() 用于显示环形链表 , Josephus() 用于处理约瑟夫问题。
 
 ```java
 class CircleManager {
     private Node first = null;
 
-    public 
+    public  void addToCircle(int nums) {
+        //  辅助指针 cursor
+        Node cursor = null;
+        for(int i=1; i<=nums; i++) {
+            Node node  =  new Node(i);
+            // 首节点特殊处理
+            if(i ==1) {
+                first = node;
+                cursor = node;
+                first.setNext(first);
+            } else {
+                // 偏好先设置下一节点为头结点
+                node.setNext(first);
+                cursor.setNext(node);
+                cursor = cursor.getNext();
+            }
+        }
+    }
+
+
+    public void show() {
+        // 空则直接返回
+        if(first == null) {
+            System.out.println("链表为空！");
+            return;
+        }
+
+        Node cursor = first;
+        while(true) {
+            System.out.println(cursor);
+            if(cursor.getNext() == first) {
+                break;
+            }
+            cursor = cursor.getNext();
+        }
+    }
+
+    /**
+     *
+     * @param startNo   起始编号
+     * @param k     间隔长度
+     * @param nums  环形链表长度
+     */
+    public void  Josephus(int startNo, int k, int nums) {
+        // 验证参数正确性
+        if(startNo < 0 || k < 0 || nums < 0) {
+            System.out.println("错误参数!");
+            return;
+        }
+
+        //生成环形链表
+        this.addToCircle(nums);
+
+        // 生成辅助指针 cursor 指向 first 前一个节点
+        Node cursor = first;
+        while(true) {
+            if(cursor.getNext() == first) {
+                break;
+            }
+            cursor = cursor.getNext();
+        }
+
+        // 将cursor, first 向后移动 k 位（k % nums)
+        for(int i=0; i< k%nums - 1; i++) {
+            cursor = cursor.getNext();
+            first = first.getNext();
+        }
+        // 开始删减环形链表， 直到只剩一个节点( cursor == first)
+        while(true) {
+            if(cursor == first) {
+                break;
+            }
+
+            for(int i=0; i<k; i++) {
+                first = first.getNext();
+                cursor = cursor.getNext();
+            }
+            System.out.println("删除节点: " + first);
+            first = first.getNext();
+            cursor.setNext(first);
+        }
+
+        System.out.println("最后节点是: " + cursor);
+    }
 }
 ```
 
