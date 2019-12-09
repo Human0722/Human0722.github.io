@@ -350,5 +350,177 @@ class Stack {
 下边是代码实现计算后缀表达式：
 
 ```java
+import java.util.Stack;
 
+public class SuffixCal {
+    public static void main(String[] argv) {
+        String expression = "3 4 + 5 x 6 -";	// 空格隔开方便操作
+        String[] list = expression.split(" ");
+        Stack<String> ss = new Stack<String> ();	// 字符串栈
+        int num1;
+        int num2;
+        for(String item : list) {
+            if(isOper(item)) {
+                num1 = Integer.parseInt(ss.pop());
+                num2 = Integer.parseInt(ss.pop());
+                ss.push(Integer.toString(calc(num1, num2, item)));
+            } else {
+                ss.push(item);
+            }
+        }
+
+        System.out.println(ss.pop());
+
+    }
+
+    // 判断是否是计算符
+    public static boolean isOper(String str) {
+        return str.equals("+") || str.equals("-") || str.equals("x") || str.equals("/");
+    }
+
+    // 计算
+    public static int calc(int num1, int num2, String oper) {
+        int res = 0;
+        switch(oper) {
+            case "+":
+                res = num1 + num2;
+                break;
+            case "-":
+                res = num2 - num1;
+                break;
+            case "x" :
+                res = num2 * num1;
+                break;
+            case "/":
+                res = num2 / num1;
+                break;
+        }
+        return res;
+    }
+}
 ```
+
+> 后缀表达式计算相比于之前的中缀表达式计算简便了很多， 下边讨论如何将 中缀表达式转为后缀表达式~
+
+#### 中缀表达式转后缀表达式的规则
+1. 准备一个运算符栈 S1 和一个操作符栈 S2.
+
+2. 从左向右扫描中缀表达式, 如果遇到数字, 直接入数栈 S2。
+
+3. 如果遇到操作符,按一下顺序判断:  
+	3.1 S1 为空时, 或者 S1 栈顶为 ```)``` 时，直接入栈。  
+
+	3.2 否则， 如果操作符的优先级大于 S1 栈顶 元素的优先级时， 直接入栈。  
+
+	3.3 否则，将 S1 栈顶的元素弹出并压入数栈 S2, 在将操作符与栈顶元素比较, 重复 3.2 ~3.3 直到操作符入栈。  
+
+4. 遇到括号时：  
+
+	4.1 如果是 ```(``` 时，则直接入栈 S1.  
+
+	4.2 如果是 ```)```, 从运算符栈 S1中弹出元素压入数栈 S2 中，直到遇到 ```(```, 弹出 ```(``` 并将这对 ```()``` 舍弃。
+
+5. 重复 2-4， 直到扫描完毕。
+
+6. 将 数栈S2 中的元素弹出并压入 符号栈S1，然后从S1 中弹出的顺序就是中缀表达式对应的后缀表达式了。
+
+
+
+附上转换代码:
+```java
+public class Translate {
+    public static void main(String[] argv) {
+        String expression = "(30+4)*5-6";
+        Stack<String> numStack = new Stack<String> ();
+        Stack<String> oprStack = new Stack<String> ();
+        int index = 0;
+        String ch;
+        String number = "";
+
+
+        while(true) {
+            ch = expression.substring(index, index+1);
+
+
+            if(isOper(ch)){
+                if(oprStack.isEmpty() || oprStack.peek().equals("(")) {
+                    oprStack.push(ch);
+                } else {
+
+                    if(ch.equals(")")){
+                        while(true){
+                            if(oprStack.peek().equals("(")) {
+                                oprStack.pop();
+                                break;
+                            }
+                            numStack.push(oprStack.pop());
+                        }
+                    } else {
+                        while(!oprStack.isEmpty() &&  priority(ch) <= priority(oprStack.peek())) {
+                            numStack.push(oprStack.pop());
+                        }
+                        oprStack.push(ch);
+                    }
+
+                }
+            }else {
+                number += ch;
+                if(index == expression.length() -1) {
+                    numStack.push(number);
+                }else {
+                    if(isOper(expression.substring(index+1, index+2))) {
+                        numStack.push(number);
+                        number = "";
+                    }
+                }
+            }
+
+
+            if(index == expression.length() -1) {
+                break;
+            }
+            index++;
+        }
+        numStack.push(oprStack.pop());
+        System.out.println(numStack);
+    }
+
+
+    public static boolean isOper(String ch)
+    {
+        return ch.equals("+") || ch.equals("-")|| ch.equals("*")|| ch.equals("/") || ch.equals("(") || ch.equals(")");
+    }
+
+    public static int priority(String ch) {
+        if(ch.equals("/") || ch.equals("*")) {
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+}
+```
+
+之前的规则叙述判断是罗列形式的，和代码的逻辑不太相同。从代码中可以看出: 1. 是否为数字， 2. 栈是否为空/栈顶是否为’(' , 3. 操作符是 ')'时的操作, 4. 优先级操作
+
+```java
+if(不是数) {
+	if(为空 || 栈顶为'(' ) {
+		push
+	} else {
+		if( ch == ')' ) {
+			xxx;
+		} else {
+			比较优先级
+		}
+	}
+}else {
+	//是数
+}
+```
+上面代码的输出为：
+
+```shell
+[30, 4, +, 5, *, 6, -]
+```
+再结合上面的后缀表达式计算方法，多项式的计算功能。这一切，都是基于 <strong>栈</strong>.
