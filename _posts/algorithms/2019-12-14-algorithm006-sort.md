@@ -43,6 +43,7 @@ for(int i=0; i<2n; i++) {
 我们通常讨论算法的最坏时间复杂度。
 
 ### 冒泡排序  
+<font color="red">相邻比较，把最值放最后边</font>
 > 冒泡排序的原理就是，对于长度为 N 的数列。进行 N-1 (最后只剩一个数的循环可以省去) 次整体循环，每次循环后，将参与循环的所有数的最大值放在最后，然后进行下一次循环，将第二大的数放在倒数第二,.......。循环结束后，就会得到一个有序的数列。
 如何在每一次循环中获得最大的值： 依次前后比较，将较大的数放在后边，数列循环完后，最大的数就会放在末尾。 
 
@@ -96,5 +97,54 @@ Output；
  1 2 3 4 5 6 
 ```
 
+### 选择排序  
 
-### 
+<font color="red">假设第一个最小,向后挨个比较找到最小与第一个互换。</font>  
+
+> 选择排序的原理就是，从 arr[0 ~ length -1]挨个假设为最值, 从假设位置后一个位置到最后，找到比假设位置值小的最小的值与假设位置交换，即可得到有序数列。  
+
+时间频度： T(n) = (n-1) * n/2 = 1/2n^2 - 1/2n => 时间复杂度: O(n) = n^2.  
+
+选择排序的技巧: 最后的 ```minIndex``` 如果和假设位置相同，则不用交换。   
+
+![sortCls]({{site.url}}/assets/images/algorithm/selectionSort.jpg)
+
+```java
+public class SelectionSort {
+    public static void main(String[] args) {
+        int arr[] = {8, 5, 7, 1, 9, 3};
+        int minIndex = 0;
+        for(int i = 0; i < arr.length - 1; i++) {
+            minIndex = i;
+            for(int j = i+1; j< arr.length; j++) {
+                if(arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            if(i != minIndex) {
+                int tmp = arr[i];
+                arr[i] = arr[minIndex];
+                arr[minIndex] = tmp;
+            }
+        }
+        showList(arr);
+    }
+
+    public static void showList(int[] arr) {
+        for(int i=0; i<arr.length; i++) {
+            System.out.printf("%d ", arr[i]);
+        }
+    }
+}
+```   
+
+Output:   
+
+```java
+1 3 5 7 8 9 
+```   
+
+### 插入排序
+<font color="red">指针遍历数列，指针后移新元素在指针前寻找合适位置，保证指针前都是有序的。</font>
+
+> 插入排序的原理是,让 ```Index``` 从 1 遍历到 length 。 数列可以分为[0 ~ index]和[index+1 ~ length]两个部分。每当 Index 后移变为 Newindex，新加入的 arr[Newindex] 就要在 [0 ~ index] 中寻找合适的位置， 插入。当遍历完[1]
