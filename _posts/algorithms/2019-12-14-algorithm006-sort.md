@@ -147,4 +147,34 @@ Output:
 ### 插入排序
 <font color="red">指针遍历数列，指针后移新元素在指针前寻找合适位置，保证指针前都是有序的。</font>
 
-> 插入排序的原理是,让 ```Index``` 从 1 遍历到 length 。 数列可以分为[0 ~ index]和[index+1 ~ length]两个部分。每当 Index 后移变为 Newindex，新加入的 arr[Newindex] 就要在 [0 ~ index] 中寻找合适的位置， 插入。当遍历完[1]
+> 插入排序的原理是,让 ```Index``` 从 1 遍历到最后 。 数列可以分为[0 ~ index]和[index+1 ~ length]两个部分。每当指针后移，新加入的 arr[index+1] 就要在 [0 ~ index+1 ] 中寻找合适的位置， 插入。当遍历完[1~最后],整个数列就是有序的了。 
+
+时间频度: T(n)=  (n-1) * n  => O(n) = n^2  
+
+插入排序如果用 for 循环 嵌套 for 循环边缘元素不好控制, 改用 while 之后出奇地顺利，指针可以伪指向 arr[-1]，这样操作就统一了， 不用很多的边缘 if-else 判断。  
+
+![sortCls]({{site.url}}/assets/images/algorithm/insertionSort.gif)
+
+```java
+public static void main(String[] args) {
+        int arr[] = {6, 5, 3, 1, 8, 7, 2, 4};
+        for(int i=1; i<arr.length; i++) {
+            int currentVal = arr[i];
+            int cursor = i-1;
+            while(cursor >=0 && currentVal < arr[cursor]) {
+                arr[cursor+1] = arr[cursor];
+                cursor--;   // 如果cursor==0, 这步操作后 cursor == -1， 用 for 循环不可控, 这是while的好处。
+            }
+            arr[cursor+1] = currentVal;
+        }
+        System.out.println(Arrays.toString(arr));
+    }
+```  
+
+Output: 
+
+```java
+[1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+
