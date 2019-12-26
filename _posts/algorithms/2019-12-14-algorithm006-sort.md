@@ -175,6 +175,108 @@ Output:
 
 ```java
 [1, 2, 3, 4, 5, 6, 7, 8]
-```
+```  
+
+### 希尔排序  
+
+> 希尔排序是插入排序的优化排序算法，由于优化元素距离对应位置过远的问题。对于插入排序而言，新加入的元素寻址(暂且把元素寻找对应位置的过程叫做寻址)是相邻位置比较，如果用 ```gap```来描述相互比较的元素的距离, 则对于插入排序而言: ```gap=1```。 而希尔排序就是 gap 从 ```length/2``` 逐渐折半直到小于1（大于0)，在这个过程中，对索引为 0、gap、gap x 2、gap x 3....进行一次插入排序。当 gap 逐渐变小，整个数列的顺序就会趋于有序，不会出现元素距离对应的排序位置过远的情况，直到最后一次 gap = 1, 就进行了一次整体的插入排序，从而达到避免操作次数过多且完成排序的目的。   
+
+![sortCls]({{site.url}}/assets/images/algorithm/ShellSort.jpg)  
+
+通过 gap 切分的小数列的排序分为两种，一种是挨个比较大小并交换的交换法，另外一种是寻址法，先保留要排序的值，然后将前面的元素后移动，找到合适的位置将保存的值放入即可。  
+
+```java
+package sort;
+
+import java.util.Arrays;
+
+public class ShellSort {
+    public static void main(String[] args) {
+        int[] arr = {8, 9, 1, 7, 2, 3, 5, 4, 6, 0};
+        shellSort02(arr);
+    }
+    
+    // 依次交换的交换法
+
+    public static void shellSort(int[] arr) {
+        int temp = 0;
+
+        for(int gap = arr.length/2; gap > 0; gap /= 2) {
+            for(int i=gap; i< arr.length; i++) {
+                for(int j=i-gap; j>=0; j-=gap) {
+                    if(arr[j] > arr[j+gap]) {
+                        temp = arr[j];
+                        arr[j] = arr[j+gap];
+                        arr[j+gap] = temp;
+                    }
+                }
+            }
+        }
+
+
+        System.out.println(Arrays.toString(arr));
+    }
+
+    
+    // 使用插入排序的移动法
+    
+    public static void shellSort02(int[] arr) {
+        int temp = 0;
+
+        for(int gap = arr.length/2; gap > 0; gap /= 2) {
+            for(int i=gap; i< arr.length; i++) {
+                 int j=i;
+                 temp = arr[j];
+                 if(arr[j] < arr[j-gap]) {
+                     while(j - gap >=0 && temp < arr[j-gap]) {
+                         arr[j] = arr[j-gap];
+                         j-=gap;
+                     }
+                     arr[j] = temp;
+                 }
+            }
+        }
+
+
+        System.out.println(Arrays.toString(arr));
+    }
+}
+
+```  
+
+Output:  
+
+```java
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```   
+
+
+### 快速排序  
+
+> 快速
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
