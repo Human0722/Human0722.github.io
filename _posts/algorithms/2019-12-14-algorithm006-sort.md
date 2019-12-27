@@ -253,7 +253,63 @@ Output:
 
 ### 快速排序  
 
-> 快速
+> 快速排序的原理就是找到一个(pivot)作为比较标准，比其小的数放在这个数的左边，比其大的数放在右边。然后以相同的方法处理左边的数列,再处理右边的数列，以此形成递归。最终整个数列就会趋于有序。 
+
+
+这里将数组第一数定为 pivot 讲解。  
+
+```java
+public class QuickSort {
+    public static void main(String[] args) {
+        int [] arr = {4, 10, 8, 7, 6, 5, 3, 12, 14, 2};
+        sort(arr, 0, arr.length - 1);
+
+        System.out.println(Arrays.toString(arr));
+    }
+
+    public static void sort(int[] arr, int lo, int hi)
+    {
+
+        if(lo >= hi) return;
+        int j = partition(arr, lo, hi);
+        sort(arr, lo, j-1);
+        sort(arr, j+1, hi);
+    }
+
+    public static int partition(int[] arr, int lo, int hi)
+    {
+        int i = lo, j = hi + 1;
+        int temp = 0;
+        int pivot = arr[lo];
+        while(true)
+        {
+            while(arr[++i] < pivot)
+                if(i == hi)
+                    break;
+
+            while(arr[--j] > pivot)
+                if(j == lo)
+                    break;
+
+            if(i >= j)
+                break;
+
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        temp = arr[j];
+        arr[j] = arr[lo];
+        arr[lo] = temp;
+
+        return j;
+    }
+}
+```
+
+
+
+
 
 
 
