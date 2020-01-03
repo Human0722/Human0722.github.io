@@ -321,9 +321,174 @@ public class QuickSort {
  5. 递归调用返回条件就是， 当数列小到只有一个元素时（i == j) 则返回。
    
 
-### 基数排序
+### 归并排序
 
-> 基数排序(Radix Sort)
+> 归并排序(MergeSort)是一种基于递归的排序算法。先将折半分为两个数列，将两个数列排序后，再将这两个数列通过比较第一个元素大小选择性取出的方式合并为一个数列。而将两个数列排序的方法也是分别将数列拆分为两个数列进行单独排序后再合并。
+
+![sortCls]({{site.url}}/assets/images/algorithm/MergeSort.gif) 
+
+
+```java
+public class MergeSort {
+    public static int[] aux = new int[8];
+    public static void main(String[] args) {
+        int arr[] = {6, 5, 3, 1, 8, 7, 2, 4};
+        MergeSort(arr, 0, arr.length - 1);
+        System.out.println(Arrays.toString(arr));
+
+    }
+
+    public static void MergeSort(int[] arr, int lo, int hi)
+    {
+        if(lo == hi)
+            return;
+        int mid = (lo + hi) /2;
+        MergeSort(arr, lo, mid);
+        MergeSort(arr, mid+1, hi);
+        Merge(arr, lo, mid, hi);
+    }
+
+    public static void Merge(int[] arr, int lo, int mid, int hi)
+    {
+        for(int k=lo; k<=hi; k++)
+        {
+            MergeSort.aux[k] = arr[k];
+        }
+        int i = lo, j = mid + 1;
+        for(int k=lo; k<=hi; k++) {
+            if(i>mid)   arr[k] = MergeSort.aux[j++];
+            else if(j > hi) arr[k] = MergeSort.aux[i++];
+            else if(MergeSort.aux[i] > MergeSort.aux[j])    arr[k] = MergeSort.aux[j++];
+            else arr[k] = MergeSort.aux[i++];
+        }
+    }
+}
+```  
+
+Output:  
+
+```java
+[1, 2, 3, 4, 5, 6, 7, 8]
+```  
+
+### 基数排序  
+
+> Magic of Math~  。   
+
+#### 基数排序的步骤:  
+
+假设排序的数据是: 170, 45, 75, 90, 802, 24, 2, 6  
+
+因为数列中最大的数是 170 ， 这是一个三位数。所以将所有的数填充到三位:   
+
+```
+170, 045, 075, 090, 802, 024, 002, 006  
+```  
+
+提取个位数，并按照从左到右的顺序根据个位数的大小排序: 
+
+```
+170, 045, 075, 090, 802, 024, 002, 006      【原数列】
+  0,   5,   5,   0,   2,   4,   2,   6      【个位数】
+
+  0,   0,   2,   2,   4,   5,   5,   6      【个位数排序】
+170, 090, 802, 002, 024, 045, 075, 006      【跟随排序后的数列】
+``` 
+
+提取十位数，并按照从左到右的顺序根据个位数的大小排序:   
+
+```
+  0,   0,   2,   2,   4,   5,   5,   6      【个位数排序】
+170, 090, 802, 002, 024, 045, 075, 006      【跟随排序后的数列】
+ 7,   9,   0,   0,   2,   4,   7,   0       【提取的十位数】
+
+ 0,   0,   0,   2,   4,   7,   7,   9       【按十位数排序】
+802, 002, 006, 024, 045, 170, 075, 090      【跟随排序后的数列】
+```  
+
+提取百位数，并按照从左到右的顺序根据个位数的大小排序: 
+```
+ 0,   0,   0,   2,   4,   7,   7,   9       【按十位数排序】
+802, 002, 006, 024, 045, 170, 075, 090      【跟随排序后的数列】
+8,   0,   0,   0,   0,   1,   0,   0        【提取的百位数】
+
+0,   0,   0,   0,   0,   0,   1,   8        【按百位排序】
+002, 006, 024, 045, 075, 090, 170, 802      【跟随排序后的数列】 <---已经是有序数列
+
+```    
+
+#### 提取数字小技巧:  
+
+个位提取：  (num % 10) / 1  
+
+十位提取：  (num % 100) / 10  
+
+百位提取：  (num % 1000) / 100
+
+#### 代码思路：  
+假设需要排序 N 个数， 首先需要一个 10*N 的二维数组 map ，作为排序的暂存区。 另外需要 1*10 的一维数组 countArr 来记录 二维数组中每一个一维数组存放的数据个数。   
+
+遍历排序数列, 取每一个数的个位数 n , 将 这个数存放到 map[n][countArr[n]++], 一轮过后，将数从二维数组中取出..
+
+按照同样方法处理十位，百位...
+
+最终的数列就是有序的数列。
+
+
+#### 代码实现:
+
+```java
+public class RadixSort {
+    public static void main(String[] args) {
+        int[] arr = {170, 45, 75, 90, 802, 24, 2, 6};
+        RadixSort(arr,3);
+    }
+
+    public static void RadixSort(int arr[], int maxLength) {
+        int[] countArr = new int[10];
+        int[][] map = new int[10][arr.length];
+        int num = 0;
+        // 从个位、十位...遍历每一位
+        for(int i=0; i<maxLength; i++) {
+            int index = 0;
+            // 遍历每一个数
+            for(int j=0; j< arr.length; j++) {
+                num = (int)((arr[j] % Math.pow(10, i+1)) / Math.pow(10, i));
+                map[num][countArr[num]++] = arr[j];
+            }
+            // 将数放回 arr
+            for(int j=0; j<countArr.length; j++) {
+                for(int k=0; k<countArr[j];k++) {
+                    arr[index++]= map[j][k];
+                    System.out.printf("%d ", map[j][k]);
+                    map[j][k] = 0;          //重置countArr/map/index
+                }
+                countArr[j] = 0;            //重置countArr/map/index
+            }
+            index = 0;                      //重置countArr/map/index
+            System.out.println();
+        }
+    }
+}
+```  
+
+Output:  
+
+```java
+170 90 802 2 24 45 75 6 
+802 2 6 24 45 170 75 90 
+2 6 24 45 75 90 170 802 
+```  
+
+
+### 完结，鸣谢  
+
+
+![sortCls]({{site.url}}/assets/images/algorithm/Teachers.jpg) 
+
+
+
+
 
 
 
