@@ -484,7 +484,11 @@ Output:
 ### 完结，鸣谢  
 
 
-![sortCls]({{site.url}}/assets/images/algorithm/Teachers.jpg) 
+![sortCls]({{site.url}}/assets/images/algorithm/Teachers.jpg)   
+
+- [最好懂的快拍](https://www.youtube.com/watch?v=7h1s2SojIRw)
+- [最好懂搞得希尔排序](https://www.youtube.com/watch?v=ddeLSDsYVp8&t=318s)
+- [最好懂的归并排序](https://www.youtube.com/watch?v=JMlYkE8hGJM&t=627s)
 
 
 
