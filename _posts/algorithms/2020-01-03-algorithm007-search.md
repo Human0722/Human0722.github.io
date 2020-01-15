@@ -89,7 +89,13 @@ Output:
 如果运用二分查找的思想，当我们在一个 1000 页的字典中寻找第900页， 首先是找到中间的第 500 页， 然后是第 750 页，...  
 显然在日常生活中，我们会往后定位点，第一次可能翻到 800 页或者 950页, 这样查找就会更快些。   
 
+插值查找只是优化了中间值的定位， 计算 arr[lo] 与 target 的差值，与 arr[hi] - arr[lo] 的比值， 优化 mid 的定位。具体优化为以下公式：  
 
+
+
+![sortCls]({{site.url}}/assets/images/algorithm/insertValueSearch.png)
+
+显然，这种算法的有效性具有“特定情况”才有优化效果：分布均匀的数列才有效。
 
 ```java
 package search;
