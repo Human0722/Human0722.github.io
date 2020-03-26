@@ -144,5 +144,32 @@ this.books.splice(index, len, [item]);  //
   splice(1,1); // 删除第二个元素
   splice(1,1,'ttt');  // 替换第二个元素
   splice(1,0, 'ttt'); // 在第二个位置添加元素
-this.books.sort();
+this.books.sort();    // 神仙语法糖，还没搞懂
+this.books.reverse(); // 将数组反转  
+```  
+
+## v-click 事件  
+
+```javascript
+// 简写
+<button @click="xxx">按钮</button>   // 调用方法，计算属性...
+<button @click="var++">按钮</button>  //直接执行 js 语句
+
+// 传入参数
+<button @click="xxx(10)">Button</button>
+// 传入元素本身
+<button @click="xxx(10,$event)"></button>
+new Vue({
+  ...
+  xxx(num, event) {
+    event.preventDefault();
+  }
+});
+
+// 一些快捷修饰符: stop prevent, capture, self, once
+<a @click.stop="handle"></a>    // 阻住默认跳转事件
+<form @submit.prevent="handle"></form>    // 阻止表单默认提交事件
+<input @keyup.enter="handle"></form>
 ```
+
+## 表单与 v-model
