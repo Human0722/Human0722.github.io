@@ -173,3 +173,9 @@ new Vue({
 ```
 
 ## 表单与 v-model
+
+```javascript
+<input type="text" v-model.lazy="xxx">  // lost focus才会更新数据
+<input type="text" v-model.number="xxx"> // 保存为数而非字符串
+<input type="text" v-model.trim="xxx">  // 去除首尾的空格
+```
