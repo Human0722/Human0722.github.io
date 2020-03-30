@@ -181,4 +181,39 @@ new Vue({
 ```  
 
 
-## 组件相关
+## 组件相关  
+
+### 父组件通过 props 传值  
+
+1.传递一个字符串
+
+```javascript
+// 父组件
+<my-component name="myName"></my-component>
+...
+new Vue({
+  component: {
+    my-componet: require('./component/xxxComponent.vue').default;
+  }
+});
+
+// 子组件中:
+{% raw %}
+<div>{{ name }}</div>
+{% endraw %}
+...
+export default{
+  props: ['name']
+};
+
+```  
+
+2.传递一个对象   
+>只要在父组件中属性名前面家上 : 即可。  
+
+```javascript
+<my-component :message="{name: 'xxx'}"></my-component>
+```  
+
+3.一些数据流  
+当父组件传递属性值的时候，值会先存储在 props 列表中。此时的数据只能读，不能修改。
