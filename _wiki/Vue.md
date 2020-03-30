@@ -216,4 +216,61 @@ export default{
 ```  
 
 3.一些数据流  
-当父组件传递属性值的时候，值会先存储在 props 列表中。此时的数据只能读，不能修改。
+当父组件传递属性值的时候，值会先存储在 props 列表中。此时的数据只能读，不能修改。  
+如果数据是需要频繁修改的属性，则用 data(){} 转存，再操作 data 中的数据即可。 data 中的数据名称可以和 props 中的同名, 在末班中访问的时候会优先访问 data 中的数据。  
+
+```javascript
+// location: 子组件
+<h3>{{ name }} </name>
+export default{
+  props: ['name'],
+  data() {
+    return {
+      name: this.name
+    }
+  }
+}
+```  
+如果数据是需要处理一次使用而无需多次更改， 这里使用 computed 来处理 props 属性值。但是 computed 属性名不能和 props 相同。
+```javascript
+// location: 子组件
+export default {
+  props: ['width'],
+  computed: {
+    style: function() {
+      return {
+        width: this.width + 'px'
+      }
+    }
+  }
+}
+```  
+4.数据过滤
+> 主要是严格约束来自父组件的属性数据类型 ,数据类型有: String, Number, Bookean, Object, Array, Function   
+
+```javascript
+...
+props: {
+  propA: Number,
+  PropB: [String, Number],
+  PropC: {
+    type: Boolean,
+    default: true
+  },
+  PropD: {
+    type: Number,
+    required: true
+  },
+  PorpE: {
+    type: Array,
+    default: function() {
+      return []
+    }
+  },
+  propF: {
+    validator: function(value) {
+      return value > 10
+    }
+  }
+}
+```
