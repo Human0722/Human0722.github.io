@@ -273,4 +273,156 @@ props: {
     }
   }
 }
+```  
+
+## 组件通信
+
+### 子组件向父组件通信  
+> 核心思想就是，在子组件的方法中用 this.$emit('父组件监听事件名','数据'); 触发父组件的事件，然后父组件定义事件并接受数据。  
+
+```javascript
+// 子组件中(my-component):
+<button @click="handleClick">+1</button>
+export default {
+  ...
+  data() {
+    return {
+      conter: 0
+    }
+  },
+  methods: {
+    handleClick(){
+      this.counter++;
+      this.$emit('increase', this.counter);     // 触发父组件事件和传递数据
+    }
+  }
+}
+
+// 父组件中
+<my-component @increase="handleIncrease"></my-component>    // 监听事件，不需要参数列表
+...
+new Vue({
+  ...
+  methods: {
+    handleIncrease(num) {     // 定义事件，此处接收参数
+      xxxx;
+    }
+  }
+});
+```  
+
+如果来自子组件的数据是想更新父组件的数据，还有一种简便的方法。当在父组件上用 v-model 绑定数据时，在子组件中直接触发父组件的 input 事件即可，所有的数据更新流程已经在底层实现。
+
+```javascript
+// 父组件中
+<my-component v-model="total"></my-component>
+new Vue({
+  data() {
+    return {
+      total: 0
+    }
+  }
+});
+
+// 子组件中
+<button @click="handleClick">+1</button>
+export default{
+    data: function() {
+        counter: 0
+    }
+    methods: {
+      this.counter++;
+      this.$emit('input', this.counter);
+    }
+};
+```  
+(不重要)如果上面的代码块难以理解， 可以通过下方的代码加深理解。  
+```javascript
+// 父组件
+<my-component @input="handleInput"></my-component>
+new Vue({
+  data() {
+    return {
+      total: 0
+    }
+  },
+  methods: {
+    handleInput(num) {
+      this.total = num;
+    }
+  }
+});
+
+// 子组件中
+<button @click="handleClick">+1</button>
+export default {
+  methods: {
+    handleClick: function() {
+      this.$emit('input', 8)
+    }
+  }
+}
 ```
+
+### 非父子组件通信  
+
+Case1: 可以通过新建一个 Vue 实例作为数据中继。具体实现如下: 先新建一个 Vue 实例 bus,在注册 app容器（父组件） 的时候注册监听 bus 的事件,然后在子组件中触发 bus 中的事件，来触发父组件中的监听事件。
+``` javascript
+// 父组件中
+<div id="app">
+  {{ message }}
+  <my-component></my-component>
+</div>
+<script>
+    var bus = new Vue();
+    new Vue({
+        data: {
+          message: ''
+        },
+        mounted: function() {
+          var _this = this;
+          // 监听来自 bus 实例的事件
+          bus.$on('on-message', function(msg) {   //这里监听
+              _this.message = msg;
+          });
+        }
+    });
+
+// 子组件中
+    <button @click="handleEvent">传递事件</button>
+    export default {
+      methods: {
+        handleEvent: function() {
+          bus.$emit('on-message', '来自 my-component 的数据');   //这里触发
+        }
+      }
+    }
+</script>
+```  
+
+Case2: 父链：在子组件中使用 this.$parent 可以直接访问父组件。  
+
+```javascript
+// 父组件
+{{ message }}
+<component-a></component-a>
+new Vue({
+  data() {
+    return {
+      message: ''
+    }
+  }
+});
+
+// 子组件
+<button @click="handleEvent">修改父组件属性值</button>
+export default{
+  methods: {
+    handleEvent: function() {
+      this.$parent.message = "来自自组件的数据"
+    }
+  }
+}
+```  
+
+Case3: 子链【xxxxxx不看也罢】
