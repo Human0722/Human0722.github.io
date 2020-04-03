@@ -574,4 +574,201 @@ new Vue({
 </div>
 ```  
 
-### Vuex
+## Vuex
+> 从组建中分离，几种管理易于共享的数据管理。  
+
+1.安装和引用
+```javascript
+// 安装 yarn add vuex
+// 引入
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+...
+
+const store = new Vuex.Store({
+  key: value
+});
+
+new Vue({
+  el: '#app',
+  ...
+  store: store
+});
+```  
+
+2.直接读数据  
+> state 中的数据可以直接读取，但是不能直接修改！
+
+```javascript
+const store = new Vuex.Store({
+  state: {
+    count01: 0,
+    count02: 3
+  }
+});
+// 组件中
+<div>
+{%raw%}
+  {{ this.$store.state.count01}}
+  {{ count02 }}
+{%endraw%}
+</div>
+...
+export default {
+  computed: {
+    count02() {
+      return this.$store.state.count
+    }
+  }
+}
+```  
+
+3. 通过 mutations 来修改数据  
+> 直接定义一些简单的数据操作逻辑，更复杂的数据操作逻辑用
+
+```javascript
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+    mutataions: {
+        increment(state) {
+            state.count++;
+        },
+        decrement(state, n=2) {
+            state.count += n
+        }
+    }
+});
+
+// 组件中
+<button @handleIncrement>Add</button>
+<button @handleDecrement>Dele</button>
+...
+export default {
+   methods: {
+      increment() {
+          this.$store.commit('increment')
+      },
+      decrement() {
+        this.$store.commit('decrement', 5)
+      }
+   }
+}
+```  
+
+``` mutations ``` 中不要进行复杂的操作，比如异步等等。这些要在 ``` action ```中进行。
+
+4.用 getters 进行数据读前再操作(过滤、统计、排序)  
+> 如果说 state 是从组件的 data 模块分离出来，那么 getter 就是从 computed 中分离出来的~
+
+```javascript
+const store = new Vuex.Store({
+    state: {
+        list: [1, 5, 9, 11]
+    },
+    getters: {
+        filteredList: (state) => {
+            return state.list.filter((item) => item < 10));
+        },
+        listCount:  (state, getters) => {
+            return getters.filteredList.length;
+        }
+    }
+});
+
+// 组件中
+<div>{%raw%}{{ list }}{%endraw%}</div>
+...
+export default{
+    computed: {
+       list: function() {
+         return this.$store.getters.filteredList
+       },
+
+       listCount: function() {
+         return this.$store.getters.listCount
+       }
+    }
+}
+```  
+
+5.在 action 中完成复杂的数据操作
+
+```javascript
+// main.js  
+const store = new Vuex.Store({
+    state: {
+      count: 0
+    },
+
+    mutataions: {
+      increment(state, n=1) {
+         state.count += n;
+      }
+    },
+    actions: {
+      asyncIncrement (context) {
+        return new Promise( resolve => {
+          setTimeout(()=>{
+            context.commit('increment');
+            resolve();
+          },1000);
+        });
+      }
+    }
+});
+
+// 组件中
+<button @click="@handleAsyncIncrease">+1</button>
+...
+export default{
+    ...
+    methods: {
+        handleAsyncIncrease() {
+            this.$store.dispatch('asyncIncrement').then( ()=>{
+                console.log(this.$store.state.count)
+            });
+        }
+    }
+}
+```  
+
+```mutations``` 和 ```action```看起来很相似，规定： 设计数据改变的，用mutations, 有业务逻辑的使用 actions.  
+
+
+6.利用 module 对数据再分组  
+> 当项目很大时，store 里面的state、getters、mutations 会非常多,都放在 main.js 中显得很不友好, 使用 modules 可以把他们写到不同的文件中。每个 module 都拥有自己的state、getters、mutations、actions.
+
+```javascript
+    const moduleA = {
+        state: {},
+        mutations: {},
+        actions: {},
+        getters: {}      
+    }
+
+    const moduleB = {
+        state: {}
+        ....    
+    }
+
+    ...
+
+    const store = new Vuex.Store({
+        modules: {
+            a: moduleA,
+            b: mouduleB
+        }
+    });
+
+    ...
+
+    store.state.a     // moduleA 的状态
+    store.state.b     // moduleB 的状态
+```  
+
+
+## 最佳实践
