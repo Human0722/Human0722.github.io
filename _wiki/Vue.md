@@ -501,4 +501,77 @@ Case3: 子链【xxxxxx不看也罢】
 </script>
 ```  
 
-## Vue-router
+## Vue-router  
+> 在前段实现 路由功能。可以按需加载~
+
+1.安装和导入  
+
+```shell
+// 安装
+npm install --save vue-router
+yarn add vue-router
+// 引用  
+import Vue from 'vue'   // 定位
+import VueRouter from 'vue-router'
+import App from './App.vue'
+
+Vue.use(VueRouter);   // 在 new Vue之前
+```
+
+2.基本使用  
+
+```javascript
+const Routers = [
+  {
+      path:   '/index',
+      meta: {
+        title: '首页'
+      },
+      component: (resolve) => require(['./component/index.vue'], resolve)     // 这种写法是按需加载路由:会将js 文件分成多个文件，配合每一个组件
+  },
+  {
+      path:   '/about',
+      meta: {
+        title: '关于'
+      },
+      component: require('./component/about.vue')       // 这种写法是一次性加载所有路由
+  }
+]
+
+// 一些路由配置
+const RouterConfig = {
+  mode: 'history',
+  routes: Routers
+}
+
+// 生成路由对象
+const router = new VueRouter(RouterConfig);
+// 一些钩子
+router.beforeEach((to, from, next) => {
+    // to: 目标路由对象
+    // from: 当前路由对象
+    // next: 调用改方法后才会进入下一个钩子 ~ return
+    window.document.title = to.meta.title;
+    next();
+});
+
+router.afterEach((to, from, next) => {
+  ...
+});
+// 实例化 Vue 时候加入 Router
+new Vue({
+  el: '#app',
+  ...
+  router: router
+});
+
+// 在模板中使用: 只能在 #app 容器中使用
+<div id="app">
+    <router-view></router-view>
+    <router-link to="/index">首页</router-link>     // -> <a href="/index">首页</a>
+    <router-link to="/index" tag="li">首页</router-link> //
+    <router-link to="/index" replace>首页</router-link>   // 无痕模式，浏览器无法返回
+</div>
+```  
+
+### Vuex
