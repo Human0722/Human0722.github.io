@@ -21,10 +21,29 @@ keywords: 小工具
 ![list]({{site.url}}/assets/images/tool/youtube-list.jpg)
 ### 下载这个视频
 用 ```-f + 数字``` 下载上面选择的清晰度。
-![list]({{site.url}}/assets/images/tool/youtube-download.jpg)
+![list]({{site.url}}/assets/images/tool/youtube-download.jpg)  
+
+### 下载整个列表
+
+下载视频列表有两种方式，分别是:  
+
+```shell
+youtube-dl -i -f mp4 --yes-playlist 'https://www.youtube.com/watch?v=7Vy8970q0Xc&list=PLwJ2VKmefmxpUJEGB1ff6yUZ5Zd7Gegn2'
+```
+
+
+
+```shell
+youtube-dl -i PLRMOX8QaZK8wYHSTn0OmjvQqzZsUug-Gu
+```
+
+
+
 ### 提取音频编码
+
 ``` ffmpeg``` 工具 ```-i``` 指定输入文件, ```-f``` 指定输出格式, 后跟文件名。
 ![convert]({{site.url}}/assets/images/tool/youtube-convert.jpg)
+
 ### 存到网易云音乐云盘
 网易云盘``` 40G```足够放很多歌了。
 ![music]({{site.url}}/assets/images/tool/youtube-music.jpg)
