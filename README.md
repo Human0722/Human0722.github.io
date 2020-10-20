@@ -1,4 +1,1 @@
-# Human0722
-
-我的个人博客：<https://Human0722.github.io>, 欢迎 Star 和 Fork。
-Fork from ：<https://mazhuang.org>
+[![Human0722's github stats](https://github-readme-stats.vercel.app/api?username=human0722)](https://github.com/human0722/Human0722.github.io)
