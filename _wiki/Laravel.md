@@ -9,6 +9,7 @@ keywords: Laravel, PHP
 <span class="ec ec-deer"></span><span class="ec ec-deer"></span><span class="ec ec-deer"></span> Laravel 编码的最佳实践 参考自[学院君](https://xueyuanjun.com/laravel-tutorial-5_7)(良心免费教程)
 
 ## 安装 Laravel
+
 在开发阶段，运行 Laravel 只需要 PHP + MySQL即可， PHP 7.* 内置了 HTTP 服务器配合 Laravel 的 artisan 脚本就可以让 Laravel 应用跑起来。 在 Windows 下推荐使用 Xampp 集成开发环境， Mac/Linux 下可以自己编译 PHP, MySQL.
 
 通过 composer 安装指定版本的 Laravel 框架。 
@@ -254,7 +255,7 @@ Laravel 提供了表单伪造的方法让 HTML 支更多的请求方式。只要
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	{% endraw %}
 </head>
-``` 
+```
 然后在请求之前将该值设置为请求头。
 ```javascript
 //Jquery
@@ -282,7 +283,7 @@ class VerifyCsrfToken extends middleware
 		'xxx.com'
 	];
 }
-``` 
+```
 
 ## Blade模板引擎 (V层)
 Blade模板引擎工作在 MVC 模型的V(View)层,  主要职责是渲染数据,直白点讲就是字符串替换。负责将控制器获取的数据渲染到含有占位符的 HTML 页面中, 渲染完成后将最终的 HTML 代码交付给控制器。  
@@ -331,7 +332,7 @@ isset() 等价于 if(), empty() 等价于 unless
 	@default 
 		statement;
 @endswitch
-```  
+```
 ### 循环结构
 #### for、 foreach、 while
 ```php
@@ -446,7 +447,7 @@ any.blade.php :								|
 	@component('alert',['title'=>'Home'])	|	
 		<strong>Error</strong>				|
 	@endcomponent							|
-```  
+```
 ### Blade高级用法
 倒立吃饭过度优雅？
 
@@ -487,12 +488,12 @@ Schema::table('users', function(Blueprint $table) {
 通过上面的方法可以轻松的实现 数据表字段的增加, 当时却无法修改已经存在的字段。完成此操作需要 ```doctrine/dbal``` 扩展包:
 ```shell
 composer require doctrine/dbal
-```  
+```
 然后就可以通过以下方法修改了:
 ```php
  $table->string('nickname',50)->change();
  $table->renameColumn('name','username');
- ```
+```
  更多的字段属性请参考 [Laravel-china 文档]()  
  修改完迁移文件后就要通过命令将 表结构写入数据库中,首先是执行迁移:
  ```php
@@ -581,7 +582,7 @@ $affectRows = DB::update('update `users` set `name` = ? where id = ?', [$name, 8
 
 $id = 3;	//	D of CURD, 返回被删除的记录数 或 抛异常
 $affectRows = DB::delete('delete from `users` where id = ?', [$id]);
-```  
+```
 #### 使用查询构建器 CURD
 ```php
 
@@ -864,7 +865,7 @@ public function down()
 		$table->dropIfExists('deleted_at');
 	})
 }
-``` 
+```
 修改完数据表之后，我们需要在模型文件中添加对软删除的支持。软删除功能是通过 ```Trait``` 的方式引入的，这种方式比继承更加灵活。
 ```php
 use Illuminate\Database\Eloquent\SoftDeletes;	//这么长交给 IDE 自动导入吧。
@@ -1104,7 +1105,7 @@ public function profile()
 }
 
 然后可以通过以下方式访问 ```nickname``` 字段。
-```php
+​```php
 $user = User::findOrFail(1);
 $profile = $user->profile;
 $nickname = $profile->
@@ -1148,7 +1149,7 @@ public function user()
 {
 	return $this->belongTo(User::class, 'user_id', 'id');
 }
-``` 
+```
 #### 一对多
 > 详细步骤看上面的一对一<span class="ec ec-point-up-2"></span>[去看看](#一对一)   
 
