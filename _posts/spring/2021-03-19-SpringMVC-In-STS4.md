@@ -1,7 +1,15 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-03-19 17:45:02
+ * @LastEditTime: 2021-04-11 20:50:22
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /Human0722.github.io/_posts/spring/2021-03-19-SpringMVC-In-STS4.md
+-->
 ---
 layout: post
 title: 在 Spring Tool Suite4 中配置运行 SpringMVC HelloWorld 程序
-categories: [SpringMVC, JavaWeb]
+categories: [JavaEE]
 description: 记录一下在 Spring Tool Suite4 中配置 SpringMVC项目
 keywords: SpringMVC, JavaWeb
 ---

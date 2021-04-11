@@ -1,7 +1,7 @@
 ---
 layout: post
 title: SpringMVC 文件下载与上传
-categories: [cate1, cate2]
+categories: [JavaEE]
 description: some word here
 keywords: keyword1, keyword2
 ---

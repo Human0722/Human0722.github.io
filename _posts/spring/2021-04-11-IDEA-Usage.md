@@ -1,7 +1,7 @@
 ---
 layout: post
 title: SSM 开发中 IDEA 中的坑 
-categories: [IDEA, JavaWeb]
+categories: [IDEA]
 description: some idea tips
 keywords: idea, javaweb
 ---

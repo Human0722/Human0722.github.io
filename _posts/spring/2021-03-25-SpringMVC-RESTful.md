@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Web 开发中 RESTful 最佳实践
-categories: [SpringMVC, JavaWeb]
+categories: [JavaEE]
 description: Standred RESTful api 
 keywords: SpringMVC  
 ---
