@@ -5,7 +5,7 @@ baseurl:
 url: https://human0722.github.io
 date_format: "ordinal"
 title: 0722号人类
-subtitle: "Running before time took our dreams away."
+subtitle: "I <span class='ec-sparkling-heart'></span> RADIOHEAD"
 description: "0722的个人博客"
 keywords: 0722, Human0722, xueiang, btainleeR
 #timezone: Asia/Shanghai
@@ -35,12 +35,8 @@ navs:
     label: 分类
 
   -
-    href: /archives/
-    label: 归档
-
-  -
     href: /wiki/
-    label: 维基
+    label: 框架s
 
   -
     href: /links/

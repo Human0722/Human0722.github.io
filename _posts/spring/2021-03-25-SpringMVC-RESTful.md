@@ -1,12 +1,12 @@
 ---
 layout: post
-title: Web 开发中 RESTful 最佳实践
-categories: [JavaEE]
+title: RESTful API 最佳实践
+categories: [Spring]
 description: Standred RESTful api 
 keywords: SpringMVC  
 ---
 
-> RESTful in SpringMVC
+> Build Standred REST API
 
 ### RESTful是什么   
 RESTful(Representational State Transfer), (资源)表现层状态转化。资源是网络上的一个实体，对应一个 URI. 表现层是资源的呈现方式，以 html、xml 等。状态转换，说的是由于 HTTP 协议是无状态协议，所有的状态都保存在服务器。综上，客户端想要操作服务器，就要让服务器端发生状态转换。而这种转换建立在表现层之上，所有叫 RESTful。  

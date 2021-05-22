@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 在 Spring Tool Suite4 中配置运行 SpringMVC HelloWorld 程序
-categories: [JavaEE]
+title: SpringMVC HelloWorld Application in STS4 
+categories: [Spring]
 description: 记录一下在 Spring Tool Suite4 中配置 SpringMVC项目
 keywords: SpringMVC, JavaWeb
 ---

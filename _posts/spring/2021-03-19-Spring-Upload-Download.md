@@ -1,11 +1,11 @@
 ---
 layout: post
 title: SpringMVC 文件下载与上传
-categories: [JavaEE]
-description: some word here
-keywords: keyword1, keyword2
+categories: [Spring]
+description: download && upload code
+keywords: SpringMVC, JavaWeb
 ---
-> 只贴代码
+> SpringMVC 上传&&下载的代码 
 
 ### 1. 文件下载 
 ```java
