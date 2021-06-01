@@ -7,11 +7,11 @@ keywords: pom
 ---
 > 被 IDEA 的 Spring Initializr 整吐了..    
 
-没错，被 Spring Initializr 生成的项目莫名其妙的报红整自闭了，还是自己新建 maven 项目手写 pom.xml吧。  
+没错，被 Spring Initializr 生成的项目莫名其妙的报红整自闭了，还是自己新建 maven 项目手写 pom.xml吧 。  
 
 父级 pom.xml 主要包括几个部分:  
   
-    - gav模块描述  
+    - gav 模块描述  
     - 子模块定义  
     - 打包方式  
     - 软件包版本变量定义  
@@ -21,7 +21,7 @@ keywords: pom
 子模块 pom.xml 主要包括几个部分:   
   
     - 父模块声明  
-    - gav模块描述  
+    - gav 模块描述  
     - 依赖声明  
 
 以下为参考 Demo。
