@@ -1,7 +1,7 @@
 ---
 layout: post
 title: IDEA 使用前的最佳建议
-categories: [Tools]
+categories: [Tool]
 description: 血泪成本得来的教训 
 keywords: IDEA 
 ---
