@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Spring 4.x
-categories: [Spring, Java]
+title: Spring Framework 指南
+categories: [Spring]
 description: Spring Wiki
 keywords: spring, wiki
 ---
