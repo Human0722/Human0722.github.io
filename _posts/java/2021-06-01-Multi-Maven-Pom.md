@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 手动编写多模块项目的 pom 文件
-categories: [java]
+categories: [Java]
 description: pom file
 keywords: pom 
 ---

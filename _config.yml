@@ -30,13 +30,17 @@ navs:
     href: /
     label: 首页
 
+  - 
+    href: /spring
+    label: Spring 系列
+
   -
     href: /categories/
     label: 分类
 
   -
     href: /wiki/
-    label: 框架s
+    label: 工具框架
 
   -
     href: /links/
@@ -45,6 +49,7 @@ navs:
   -
     href: /about/
     label: 关于
+  
 
 # ---------------- #
 #       RSS        #
