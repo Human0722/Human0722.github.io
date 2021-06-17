@@ -32,11 +32,11 @@ Spring 下载地址: [repo.spring.io](https://repo.spring.io) `Artifact> libs-re
 
 ##### 核心容器（Core Container）  
 
-- spring-core：核心类库，其他模块大量使用此jar包；
-- spring-beans：Spring定义Bean的支持；
-- spring-context：运行时Spring容器；
+- spring-core<span class="ec ec-rainbow"></span>：核心类库，其他模块大量使用此jar包；
+- spring-beans<span class="ec ec-rainbow"></span>：Spring定义Bean的支持；
+- spring-context<span class="ec ec-rainbow"></span>：运行时Spring容器；
 - spring-context-support：Spring容器对第三方包的集成支持，比如邮件服务、视图解析
-- spring-expression：Spring表达式语言  
+- spring-expression<span class="ec ec-rainbow"></span>：Spring表达式语言  
 
 ##### AOP
 - spring-aop：基于代理的AOP支持；
