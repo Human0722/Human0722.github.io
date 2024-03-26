@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[21],{347:function(t,n,s){"use strict";s.r(n);var o=s(0),e=Object(o.a)({},(function(){var t=this._self._c;return t("ContentSlotsDistributor",{attrs:{"slot-key":this.$parent.slotKey}},[t("blockquote",[t("p",[this._v("自定义启动器")])])])}),[],!1,null,null,null);n.default=e.exports}}]);
